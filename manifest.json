@@ -1,7 +1,7 @@
 {
   "name": "HPT Smart - Vách Bọt Nước",
   "short_name": "HPT Smart",
-  "start_url": "./index.html",
+  "start_url": "/hptsmart/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#0d6efd",
