@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - Hưng Phú Trung</title>
+    <!-- Sử dụng font Be Vietnam Pro mạnh mẽ, hiện đại -->
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Be Vietnam Pro', sans-serif;
+        }
+        body {
+            background: #f8f9fa;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 24px;
+        }
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            margin: auto;
+        }
+        .logo-area {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+        .logo-area img {
+            width: 140px;
+            height: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 10px rgba(163, 124, 53, 0.25));
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700; /* Tiêu đề/Nhãn đậm mạnh mẽ */
+            color: #444;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .input-box {
+            position: relative;
+            width: 100%;
+        }
+        .input-box input {
+            width: 100%;
+            padding: 14px 16px;
+            background: #ffffff;
+            border: 1px solid #e1e4e8;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 400;
+            color: #333;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .input-box input:focus {
+            border-color: #b89753;
+            box-shadow: 0 0 0 3px rgba(184, 151, 83, 0.15);
+        }
+        .form-extra {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            font-size: 13px;
+            margin-bottom: 30px;
+        }
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+            font-weight: 300; /* Chú thích chọn light */
+            cursor: pointer;
+        }
+        .remember-me input {
+            accent-color: #b89753;
+            width: 16px;
+            height: 16px;
+        }
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #c5a059 0%, #a37c35 100%);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700; /* Tiêu đề/Nút bấm Bold mạnh mẽ */
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(163, 124, 53, 0.3);
+            transition: transform 0.2s ease, opacity 0.2s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            min-height: 48px;
+        }
+        .btn-login:active {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+        
+        /* Hiệu ứng Spinner vòng tròn tải dữ liệu siêu mượt */
+        .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 11px;
+            font-weight: 300; /* Chú thích chọn light */
+            color: #888;
+            line-height: 1.6;
+            width: 100%;
+        }
+        .footer-links {
+            margin-bottom: 4px;
+        }
+        .footer-links a {
+            color: #666;
+            font-weight: 300; /* Chú thích chọn light */
+            text-decoration: none;
+            margin: 0 6px;
+            cursor: pointer;
+        }
+        .footer-links a:hover {
+            color: #b89753;
+            text-decoration: underline;
+        }
+        .footer-copy {
+            white-space: nowrap;
+        }
+
+        /* Modal Popup dùng chung */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-content {
+            background: #fff;
+            width: 100%;
+            max-width: 500px;
+            max-height: 80vh;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .modal-header {
+            font-size: 16px;
+            font-weight: 700; /* Tiêu đề Bold */
+            color: #b89753;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        /* Modal riêng cho cảnh báo lỗi */
+        .modal-header.error-header {
+            color: #d9534f;
+        }
+        .modal-body {
+            font-size: 13px;
+            font-weight: 300; /* Nội dung chú thích/thông tin light */
+            color: #444;
+            line-height: 1.6;
+            overflow-y: auto;
+            text-align: left;
+            margin-bottom: 20px;
+            max-height: 50vh;
+            padding-right: 5px;
+        }
+        .modal-body h3 {
+            font-size: 14px;
+            font-weight: 700; /* Tiêu đề trong modal Bold */
+            color: #222;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+        .close-btn {
+            background: #b89753;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            align-self: center;
+            width: 120px;
+        }
+        .close-btn.error-btn {
+            background: #d9534f;
+        }
+        .close-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <!-- Logo -->
+        <div class="logo-area">
+            <img src="icon-512.png" alt="Hưng Phú Trung Logo">
+        </div>
+
+        <!-- Form Đăng Nhập -->
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Số điện thoại</label>
+                <div class="input-box">
+                    <input type="tel" id="phoneInput" placeholder="Nhập số điện thoại của bạn" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Mật khẩu</label>
+                <div class="input-box">
+                    <input type="password" id="passInput" placeholder="Nhập mật khẩu do công ty cấp" required>
+                </div>
+            </div>
+
+            <div class="form-extra">
+                <label class="remember-me">
+                    <input type="checkbox" id="rememberMe"> Lưu đăng nhập
+                </label>
+            </div>
+
+            <button type="submit" class="btn-login">
+                <span id="btnText">Đăng Nhập</span>
+                <div class="spinner" id="btnSpinner"></div>
+            </button>
+        </form>
+    </div>
+
+    <!-- Footer thông tin -->
+    <div class="footer">
+        <div class="footer-links">
+            <a onclick="openModal('privacyModal')">Chính sách bảo mật</a> | <a onclick="openModal('termsModal')">Điều khoản sử dụng</a>
+        </div>
+        <div class="footer-copy">Phiên bản v1.0 &copy; Công ty Nội Thất Hưng Phú Trung. All rights reserved.</div>
+    </div>
+
+    <!-- Modal Popup Thông Báo Lỗi (Đăng nhập thất bại) -->
+    <div id="errorModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header error-header">Thông báo đăng nhập</div>
+            <div class="modal-body" id="errorMessageText">
+                Số điện thoại hoặc mật khẩu không chính xác. Vui lòng kiểm tra lại thông tin hoặc liên hệ bộ phận kỹ thuật công ty để được hỗ trợ cấp lại mật khẩu.
+            </div>
+            <button class="close-btn error-btn" onclick="closeModal('errorModal')">Đã hiểu</button>
+        </div>
+    </div>
+
+    <!-- Modal Chính sách bảo mật -->
+    <div id="privacyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Chính sách bảo mật</div>
+            <div class="modal-body">
+                <h3>1. Thu thập thông tin</h3>
+                <p>Công ty Nội Thất Hưng Phú Trung thu thập thông tin số điện thoại và thông tin thiết bị nhằm mục đích quản lý và vận hành hệ thống thiết bị thông minh (HPTSmart) của khách hàng.</p>
+                <br>
+                <h3>2. Bảo mật dữ liệu</h3>
+                <p>Mọi thông tin cá nhân và dữ liệu hệ thống điều khiển của quý khách được mã hóa và lưu trữ an toàn, cam kết không cung cấp cho bên thứ ba dưới mọi hình thức.</p>
+                <br>
+                <h3>3. Quyền lợi khách hàng</h3>
+                <p>Khách hàng có quyền yêu cầu hỗ trợ thay đổi mật khẩu hoặc cập nhật thông tin tài khoản trực tiếp thông qua bộ phận kỹ thuật của công ty.</p>
+            </div>
+            <button class="close-btn" onclick="closeModal('privacyModal')">Đóng</button>
+        </div>
+    </div>
+
+    <!-- Modal Điều khoản sử dụng -->
+    <div id="termsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Điều khoản sử dụng</div>
+            <div class="modal-body">
+                <h3>1. Tài khoản truy cập</h3>
+                <p>Tài khoản và mật khẩu đăng nhập ứng dụng HPTSmart do Công ty Hưng Phú Trung trực tiếp cấp cho khách hàng lắp đặt hệ thống. Khách hàng có trách nhiệm bảo mật thông tin tài khoản của mình.</p>
+                <br>
+                <h3>2. Sử dụng hệ thống</h3>
+                <p>Ứng dụng được sử dụng để giám sát và điều khiển thiết bị nội thất thông minh trong công trình của gia đình/doanh nghiệp. Nghiêm cấm mọi hành vi can thiệp trái phép vào hệ thống máy chủ.</p>
+                <br>
+                <h3>3. Giới hạn trách nhiệm</h3>
+                <p>Công ty Hưng Phú Trung không chịu trách nhiệm trong trường hợp khách hàng chia sẻ thông tin tài khoản dẫn đến việc truy cập trái phép từ bên thứ ba.</p>
+            </div>
+            <button class="close-btn" onclick="closeModal('termsModal')">Đóng</button>
+        </div>
+    </div>
+
+    <!-- JavaScript Xử lý tối ưu tốc độ kết nối -->
+    <script>
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwZeVnrNSUF8VQSpGe_NonOotDxHVTcDPwc7uSW3oJLO1hqdY0w41JguowLip2bCqB44A/exec";
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const phone = document.getElementById('phoneInput').value.trim();
+            const password = document.getElementById('passInput').value.trim();
+            const btnLogin = document.querySelector('.btn-login');
+            const btnText = document.getElementById('btnText');
+            const btnSpinner = document.getElementById('btnSpinner');
+            
+            if (!phone || !password) {
+                showErrorModal('Vui lòng nhập đầy đủ số điện thoại và mật khẩu!');
+                return;
+            }
+
+            // Kích hoạt trạng thái Loading mượt mà (ẩn chữ, hiện vòng tròn xoay)
+            btnText.innerText = "Đang kiểm tra dữ liệu...";
+            btnSpinner.style.display = "block";
+            btnLogin.disabled = true;
+
+            // Tạo cơ chế Timeout 10 giây để tránh treo ứng dụng khi mạng quá chậm
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+            try {
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    redirect: 'follow',
+                    signal: controller.signal,
+                    body: JSON.stringify({
+                        action: 'login',
+                        phone: phone,
+                        password: password
+                    })
+                });
+
+                clearTimeout(timeoutId);
+                const result = await response.json();
+                
+                // Khôi phục trạng thái nút bấm
+                resetButtonState(btnText, btnSpinner, btnLogin);
+                
+                if (result.status === 'success') {
+                    // Lưu thông tin phiên làm việc
+                    sessionStorage.setItem('userPhone', phone);
+                    sessionStorage.setItem('userFullName', result.fullName);
+                    sessionStorage.setItem('userAddress', result.address);
+                    
+                    // Chuyển thẳng tới trang dashboard
+                    window.location.href = 'dashboard.html';
+                } else {
+                    showErrorModal(result.message || 'Số điện thoại hoặc mật khẩu không chính xác!');
+                }
+            } catch (error) {
+                clearTimeout(timeoutId);
+                resetButtonState(btnText, btnSpinner, btnLogin);
+                
+                if (error.name === 'AbortError') {
+                    showErrorModal('Hệ thống phản hồi quá chậm (Timeout). Vui lòng kiểm tra lại kết nối mạng và thử lại.');
+                } else {
+                    showErrorModal('Số điện thoại hoặc mật khẩu không chính xác, hoặc không thể kết nối tới cơ sở dữ liệu Google Sheet.');
+                }
+            }
+        });
+
+        function resetButtonState(textEl, spinnerEl, btnEl) {
+            textEl.innerText = "Đăng Nhập";
+            spinnerEl.style.display = "none";
+            btnEl.disabled = false;
+        }
+
+        function showErrorModal(message) {
+            document.getElementById('errorMessageText').innerText = message;
+            openModal('errorModal');
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+        
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+    </script>
+
+</body>
+</html>
