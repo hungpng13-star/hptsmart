@@ -1,0 +1,32 @@
+HPTSmart 1.1.2 — INSTANT CONTROL FIX
+
+Mục tiêu: giảm độ trễ/chập chờn khi khách hàng vừa cấu hình xong và bấm ON/OFF.
+
+FIX CHÍNH:
+1. MQTT loop + xử lý GPIO2/GPIO3 luôn chạy ở control loop chính, không còn bị HTTP/HTTPS timer sync chặn.
+2. Đồng bộ timer từ Cloudflare chạy bằng FreeRTOS task riêng, dùng HTTPS client riêng.
+3. HTTP timer timeout giảm còn 1.5 giây ở task riêng; không ảnh hưởng đường điều khiển.
+4. PWA vẫn giữ điều khiển MQTT trực tiếp, optimistic UI và ACK/state để xác nhận thực tế.
+5. Không thay đổi GPIO: MasterOn=GPIO2, DrainOn=GPIO3.
+6. Không thay đổi MQTT command: MASTER_ON/OFF, DRAIN_ON/OFF.
+7. Không thay đổi cơ chế Pair: AP chỉ tắt sau khi Wi-Fi + MQTT kết nối thành công.
+
+LƯU Ý:
+- Firmware 1.1.2 là bản tối ưu control-path dựa trên HPTSmart V1.1.2 AP-WIFI FIX 4 ERRORS.
+- Sau khi flash firmware mới, kiểm tra thực tế ON/OFF nhiều lần liên tiếp và kiểm tra Timer.
+
+V1.1.2 WIFI RETRY FIX
+- Fixed a critical retry bug after the first wrong Wi-Fi SSID/password attempt.
+- Root cause: ESP32 STA could remain in CONNECTING state; a second WiFi.begin() then produced "wifi:sta is connecting, cannot set config" and did not apply the new credentials.
+- Before every retry, the firmware now fully stops the previous STA attempt, clears the previous STA configuration, waits for the driver to settle, and starts a fresh connection attempt.
+- Wi-Fi connection timeout increased to 12 seconds to allow slower home routers more time.
+- AP remains active throughout retry.
+
+
+HPTSmart 1.1.2 — INSTANT CONTROL AFTER PAIR
+- Base: HPTSmart 1.1.2 stable; 1.1.2 is not used.
+- Targeted fix: start the phone-side MQTT session as soon as the newly claimed device is received.
+- The Pair flow waits up to 3.5 seconds for the PWA MQTT client to become connected before returning Home.
+- MQTT reconnect period reduced to 1 second and connect timeout to 5 seconds; keepalive set to 20 seconds.
+- If MQTT is still not ready, manual commands remain queued and are published automatically on CONNECT.
+- No GPIO, API command, Pair Wi-Fi retry, or firmware control logic was otherwise changed from 1.1.2.

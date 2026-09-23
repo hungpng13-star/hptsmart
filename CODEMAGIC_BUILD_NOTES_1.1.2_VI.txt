@@ -1,0 +1,23 @@
+HPTSmart 1.1.2 — Codemagic iOS build package
+
+This is the HPTSmart 1.1.2 Capacitor 8 project with a Codemagic workflow added.
+
+Codemagic workflow:
+1. npm install
+2. npx cap add ios (if ios/App does not exist)
+3. npm run cap:sync:ios
+4. pod install
+5. Apply HPTSmart local-network/ATS permissions
+6. Configure iOS signing
+7. Build HPTSmart.ipa
+
+Project identity:
+- App: HPTSmart
+- Version: 1.1.2
+- Bundle ID: com.hungphutrung.hptsmart
+
+IMPORTANT:
+- Put the contents of this package at the root of the GitHub repository.
+- Keep codemagic.yaml at the repository root.
+- A signed IPA still requires iOS signing credentials/provisioning configured in Codemagic.
+- The workflow starts with development signing for device testing.

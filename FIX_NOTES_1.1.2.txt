@@ -1,0 +1,27 @@
+HPTSmart V1.1.2 AP-WIFI — FIX 4 LỖI
+
+1. Kiểm tra Wi-Fi nhanh hơn:
+   - Timeout kết nối Wi-Fi nhà giảm từ 15 giây xuống 7 giây.
+   - Khi không kết nối được, trang 192.168.4.1 báo thân thiện:
+     "Không đúng tên Wi-Fi hoặc mật khẩu. Vui lòng kiểm tra và thử lại."
+   - Wi-Fi AP vẫn giữ nguyên để khách sửa và thử lại.
+
+2. Trạng thái trên 192.168.4.1:
+   - Loại bỏ các câu kỹ thuật như MQTT HiveMQ khỏi trạng thái hiển thị cho khách.
+   - Dùng các câu ngắn, thân thiện:
+     "Đang kết nối Wi-Fi nhà…"
+     "Wi-Fi đã kết nối. Đang hoàn tất thiết lập…"
+     "Kết nối thành công!"
+
+3. Trang Thêm thiết bị trên Dashboard:
+   - Bỏ câu "Không cần nhập Device ID..."
+   - Thay bằng "Nhập tên thiết bị vào ô bên dưới."
+
+4. Hướng dẫn Wi-Fi AP:
+   - Bỏ ví dụ HPTSmart-E0886E513E38 để không gây nhầm giữa các thiết bị.
+   - Sau khi ESP32 được nhận diện, Dashboard tự hiển thị đúng SSID AP theo Device ID:
+     HPTSmart- + 12 ký tự cuối của Device ID.
+   - Trang 192.168.4.1 vẫn hiển thị chính xác SSID AP mà ESP32 đang phát.
+
+Lưu ý:
+- Không thay đổi GPIO2/GPIO3, MQTT command logic, Pair completion rule hoặc cơ chế AP chỉ tắt sau khi MQTT kết nối thành công.
